@@ -37,7 +37,7 @@
             border: 2px solid #D4AF37; 
             max-width: 750px;
             width: 100%;
-            z-index: 10;
+            z-index: 5; /* Keep container below floating balloons */
             position: relative;
         }
 
@@ -170,7 +170,7 @@
             box-shadow: 0 15px 35px rgba(212, 175, 55, 0.6);
         }
 
-        /* Balloon Container & Styles */
+        /* Balloon Container - Now OVER the full website */
         .balloon-container {
             position: absolute;
             bottom: 0;
@@ -178,8 +178,8 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            pointer-events: none;
-            z-index: 1;
+            pointer-events: none; /* Let clicks pass through empty spaces to buttons */
+            z-index: 999; /* Higher than container to float in front */
         }
 
         .balloon-wrapper {
@@ -189,6 +189,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            cursor: pointer;
+            pointer-events: auto; /* Enable touch/click ONLY on the balloon wrappers */
+            user-select: none;
         }
 
         /* Ultra Premium 3D Balloon */
@@ -197,11 +200,16 @@
             height: 76px;
             border-radius: 50% 50% 50% 50% / 42% 42% 58% 58%;
             position: relative;
-            /* Advanced inner shadow for metallic 3D depth */
             box-shadow: inset -8px -10px 20px rgba(0,0,0,0.35), inset 8px 8px 15px rgba(255,255,255,0.2), 0 10px 20px rgba(0,0,0,0.2);
+            transition: transform 0.1s ease;
         }
 
-        /* High Gloss Highlight Reflection (White Shine) */
+        /* Pop effect on click */
+        .balloon:active {
+            transform: scale(1.2);
+        }
+
+        /* High Gloss Highlight Reflection */
         .balloon::before {
             content: "";
             position: absolute;
@@ -226,7 +234,7 @@
             z-index: 2;
         }
 
-        /* Curved SVG Ribbon Styling with fluid sway */
+        /* Curved SVG Ribbon Styling */
         .ribbon-svg {
             margin-top: 2px;
             width: 35px;
@@ -356,29 +364,27 @@
         }, 3000);
     }
 
-    // Advanced Balloon & Vibrant Contrast Ribbon Generator
+    // Advanced Balloon & Vibrant Contrast Ribbon Generator with Tap-to-Burst feature
     function createBalloons() {
         const container = document.getElementById('balloonContainer');
         
-        // Premium Festive Palette
         const balloonColors = ['#D4AF37', '#F3E5AB', '#AA7C11', '#FF4136', '#0074D9', '#2ECC40', '#FF851B', '#B10DC9']; 
         const ribbonColors = ['#FF851B', '#0074D9', '#FF4136', '#2ECC40', '#FFDC00', '#B10DC9', '#7FDBFF', '#F3E5AB']; 
         
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 18; i++) { // Increased balloon count slightly for more fun
             const wrapper = document.createElement('div');
             wrapper.className = 'balloon-wrapper';
             
-            // Selecting distinct random indexes to ensure balloon and ribbon have contrasting colors
             const bIdx = Math.floor(Math.random() * balloonColors.length);
             let rIdx = Math.floor(Math.random() * ribbonColors.length);
-            if (bIdx === rIdx) { rIdx = (rIdx + 1) % ribbonColors.length; } // Avoid same color matching
+            if (bIdx === rIdx) { rIdx = (rIdx + 1) % ribbonColors.length; } 
 
             const bColor = balloonColors[bIdx];
             const rColor = ribbonColors[rIdx];
 
             const leftPosition = Math.random() * 100;
-            const delay = Math.random() * 10;
-            const duration = 9 + Math.random() * 5;
+            const delay = Math.random() * 12;
+            const duration = 8 + Math.random() * 5;
 
             wrapper.style.left = `${leftPosition}%`;
             wrapper.style.animationDelay = `${delay}s`;
@@ -394,7 +400,7 @@
             knot.className = 'balloon-knot';
             knot.style.borderBottomColor = bColor;
 
-            // Spiral SVG Ribbon with mismatched pop color
+            // Spiral SVG Ribbon
             const svgNS = "http://www.w3.org/2000/svg";
             const svg = document.createElementNS(svgNS, "svg");
             svg.setAttribute("class", "ribbon-svg");
@@ -402,21 +408,107 @@
 
             const path = document.createElementNS(svgNS, "path");
             path.setAttribute("d", "M 20,0 Q 35,15 20,30 Q 5,45 20,60 Q 35,75 20,90 Q 10,95 20,100");
-            path.setAttribute("stroke", rColor); // Ribbon gets its own vibrant color!
+            path.setAttribute("stroke", rColor); 
             path.setAttribute("stroke-width", "2.5");
             path.setAttribute("fill", "none");
             path.setAttribute("stroke-linecap", "round");
 
-            // Randomize individual ribbon sway speeds for organic realism
             svg.style.animationDuration = `${2 + Math.random() * 2}s`;
-
             svg.appendChild(path);
+            
             wrapper.appendChild(balloon);
             wrapper.appendChild(knot);
             wrapper.appendChild(svg);
+
+            // --- CLICK / TOUCH TO BLAST LOGIC ---
+            wrapper.addEventListener('click', function(e) {
+                // Get exact click coordinates for localized confetti blast
+                const rect = wrapper.getBoundingClientRect();
+                const clickX = (rect.left + rect.width / 2) / window.innerWidth;
+                const clickY = (rect.top + rect.height / 3) / window.innerHeight;
+
+                // Tiny interactive confetti pop at balloon spot
+                confetti({
+                    particleCount: 30,
+                    spread: 60,
+                    origin: { x: clickX, y: clickY },
+                    colors: [bColor, rColor, '#ffffff']
+                });
+
+                // Instantly remove balloon from view
+                wrapper.remove();
+                
+                // Re-spawn a new balloon after 3 seconds to keep the loop going!
+                setTimeout(() => {
+                    spawnSingleBalloon();
+                }, 3000);
+            });
+
             container.appendChild(wrapper);
         }
     }
+
+    // Helper function to dynamically add a new balloon when one pops
+    function spawnSingleBalloon() {
+        const container = document.getElementById('balloonContainer');
+        if(!container) return;
+        
+        const balloonColors = ['#D4AF37', '#F3E5AB', '#AA7C11', '#FF4136', '#0074D9', '#2ECC40', '#FF851B', '#B10DC9']; 
+        const ribbonColors = ['#FF851B', '#0074D9', '#FF4136', '#2ECC40', '#FFDC00', '#B10DC9', '#7FDBFF', '#F3E5AB']; 
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'balloon-wrapper';
+        
+        const bIdx = Math.floor(Math.random() * balloonColors.length);
+        let rIdx = Math.floor(Math.random() * ribbonColors.length);
+        if (bIdx === rIdx) { rIdx = (rIdx + 1) % ribbonColors.length; } 
+
+        const bColor = balloonColors[bIdx];
+        const rColor = ribbonColors[rIdx];
+
+        wrapper.style.left = `${Math.random() * 100}%`;
+        wrapper.style.animationDelay = `0s`;
+        wrapper.style.animationDuration = `${8 + Math.random() * 5}s`;
+
+        const balloon = document.createElement('div');
+        balloon.className = 'balloon';
+        balloon.style.backgroundColor = bColor;
+
+        const knot = document.createElement('div');
+        knot.className = 'balloon-knot';
+        knot.style.borderBottomColor = bColor;
+
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("class", "ribbon-svg");
+        svg.setAttribute("viewBox", "0 0 40 100");
+
+        const path = document.createElementNS(svgNS, "path");
+        path.setAttribute("d", "M 20,0 Q 35,15 20,30 Q 5,45 20,60 Q 35,75 20,90 Q 10,95 20,100");
+        path.setAttribute("stroke", rColor); 
+        path.setAttribute("stroke-width", "2.5");
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke-linecap", "round");
+
+        svg.style.animationDuration = `${2 + Math.random() * 2}s`;
+        svg.appendChild(path);
+        
+        wrapper.appendChild(balloon);
+        wrapper.appendChild(knot);
+        wrapper.appendChild(svg);
+
+        wrapper.addEventListener('click', function() {
+            const rect = wrapper.getBoundingClientRect();
+            const clickX = (rect.left + rect.width / 2) / window.innerWidth;
+            const clickY = (rect.top + rect.height / 3) / window.innerHeight;
+            confetti({ particleCount: 30, spread: 60, origin: { x: clickX, y: clickY }, colors: [bColor, rColor, '#ffffff'] });
+            wrapper.remove();
+            setTimeout(() => { spawnSingleBalloon(); }, 3000);
+        });
+
+        container.appendChild(wrapper);
+    }
+
     window.onload = createBalloons;
 </script>
 
