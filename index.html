@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EHR MART - GRAND OPENING</title>
+    <!-- FontAwesome for Facebook Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- canvas-confetti library for party blast animation -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -31,13 +33,13 @@
         .container {
             background: linear-gradient(135deg, rgba(14, 43, 30, 0.9), rgba(7, 24, 16, 0.98));
             backdrop-filter: blur(12px);
-            padding: 60px 40px;
+            padding: 60px 40px 40px 40px; /* Adjusted padding for brand footer */
             border-radius: 24px;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 0 30px rgba(212, 175, 55, 0.15);
             border: 2px solid #D4AF37; 
             max-width: 750px;
             width: 100%;
-            z-index: 5; /* Keep container below floating balloons */
+            z-index: 5; 
             position: relative;
         }
 
@@ -162,6 +164,7 @@
             letter-spacing: 2px;
             box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
             transition: all 0.4s ease;
+            margin-bottom: 40px;
         }
 
         .celebrate-btn:hover {
@@ -170,7 +173,54 @@
             box-shadow: 0 15px 35px rgba(212, 175, 55, 0.6);
         }
 
-        /* Balloon Container - Now OVER the full website */
+        /* PREMIUM BRAND FOOTER */
+        .brand-footer {
+            border-top: 1px solid rgba(212, 175, 55, 0.15);
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+
+        .brand-link {
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(243, 229, 171, 0.7);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .brand-link span.company-name {
+            color: #D4AF37;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+            position: relative;
+        }
+
+        .brand-link i {
+            font-size: 1.1rem;
+            color: #D4AF37;
+            transition: transform 0.3s ease;
+        }
+
+        .brand-link:hover {
+            color: #ffffff;
+        }
+
+        .brand-link:hover span.company-name {
+            color: #F3E5AB;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+        }
+
+        .brand-link:hover i {
+            transform: scale(1.2) rotate(10deg);
+            color: #3b5998; /* Classic Facebook Blue Pop on Hover */
+        }
+
+        /* Balloon Container - OVER the full website */
         .balloon-container {
             position: absolute;
             bottom: 0;
@@ -178,8 +228,8 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            pointer-events: none; /* Let clicks pass through empty spaces to buttons */
-            z-index: 999; /* Higher than container to float in front */
+            pointer-events: none; 
+            z-index: 999; 
         }
 
         .balloon-wrapper {
@@ -190,7 +240,7 @@
             flex-direction: column;
             align-items: center;
             cursor: pointer;
-            pointer-events: auto; /* Enable touch/click ONLY on the balloon wrappers */
+            pointer-events: auto; 
             user-select: none;
         }
 
@@ -204,12 +254,10 @@
             transition: transform 0.1s ease;
         }
 
-        /* Pop effect on click */
         .balloon:active {
             transform: scale(1.2);
         }
 
-        /* High Gloss Highlight Reflection */
         .balloon::before {
             content: "";
             position: absolute;
@@ -223,7 +271,6 @@
             filter: blur(0.5px);
         }
 
-        /* Balloon Knot */
         .balloon-knot {
             width: 0;
             height: 0;
@@ -234,7 +281,6 @@
             z-index: 2;
         }
 
-        /* Curved SVG Ribbon Styling */
         .ribbon-svg {
             margin-top: 2px;
             width: 35px;
@@ -273,6 +319,7 @@
             .time-box { min-width: 75px; padding: 12px 8px; }
             .time-box span { font-size: 1.8rem; }
             .time-box label { font-size: 0.7rem; }
+            .brand-link { font-size: 0.75rem; letter-spacing: 1px; }
         }
     </style>
 </head>
@@ -309,6 +356,15 @@
 
     <!-- Action Button -->
     <button class="celebrate-btn" onclick="triggerCelebration()">Experience the Launch 🥳</button>
+
+    <!-- Visual Adnan IT Branding Footer -->
+    <div class="brand-footer">
+        <a href="https://www.facebook.com/profile.php?id=61564570796697" target="_blank" class="brand-link">
+            <span>Powered by</span> 
+            <span class="company-name">adnanit.com</span>
+            <i class="fab fa-facebook"></i>
+        </a>
+    </div>
 </div>
 
 <!-- Linked to your local sound file -->
@@ -344,34 +400,20 @@
         audio.currentTime = 0; 
         audio.play().catch(error => console.log("Audio play blocked: ", error));
 
-        confetti({
-            particleCount: 200,
-            spread: 90,
-            origin: { x: 0.1, y: 0.65 },
-            colors: ['#D4AF37', '#F3E5AB', '#AA7C11', '#ffffff', '#0B251A']
-        });
-        confetti({
-            particleCount: 200,
-            spread: 90,
-            origin: { x: 0.9, y: 0.65 },
-            colors: ['#D4AF37', '#F3E5AB', '#AA7C11', '#ffffff', '#0B251A']
-        });
+        confetti({ particleCount: 200, spread: 90, origin: { x: 0.1, y: 0.65 }, colors: ['#D4AF37', '#F3E5AB', '#AA7C11', '#ffffff', '#0B251A'] });
+        confetti({ particleCount: 200, spread: 90, origin: { x: 0.9, y: 0.65 }, colors: ['#D4AF37', '#F3E5AB', '#AA7C11', '#ffffff', '#0B251A'] });
     }
 
     function autoCelebration() {
-        setInterval(() => {
-            triggerCelebration();
-        }, 3000);
+        setInterval(() => { triggerCelebration(); }, 3000);
     }
 
-    // Advanced Balloon & Vibrant Contrast Ribbon Generator with Tap-to-Burst feature
     function createBalloons() {
         const container = document.getElementById('balloonContainer');
-        
         const balloonColors = ['#D4AF37', '#F3E5AB', '#AA7C11', '#FF4136', '#0074D9', '#2ECC40', '#FF851B', '#B10DC9']; 
         const ribbonColors = ['#FF851B', '#0074D9', '#FF4136', '#2ECC40', '#FFDC00', '#B10DC9', '#7FDBFF', '#F3E5AB']; 
         
-        for (let i = 0; i < 18; i++) { // Increased balloon count slightly for more fun
+        for (let i = 0; i < 18; i++) {
             const wrapper = document.createElement('div');
             wrapper.className = 'balloon-wrapper';
             
@@ -382,25 +424,18 @@
             const bColor = balloonColors[bIdx];
             const rColor = ribbonColors[rIdx];
 
-            const leftPosition = Math.random() * 100;
-            const delay = Math.random() * 12;
-            const duration = 8 + Math.random() * 5;
+            wrapper.style.left = `${Math.random() * 100}%`;
+            wrapper.style.animationDelay = `${Math.random() * 12}s`;
+            wrapper.style.animationDuration = `${8 + Math.random() * 5}s`;
 
-            wrapper.style.left = `${leftPosition}%`;
-            wrapper.style.animationDelay = `${delay}s`;
-            wrapper.style.animationDuration = `${duration}s`;
-
-            // 3D Balloon Node
             const balloon = document.createElement('div');
             balloon.className = 'balloon';
             balloon.style.backgroundColor = bColor;
 
-            // Matching Knot Node
             const knot = document.createElement('div');
             knot.className = 'balloon-knot';
             knot.style.borderBottomColor = bColor;
 
-            // Spiral SVG Ribbon
             const svgNS = "http://www.w3.org/2000/svg";
             const svg = document.createElementNS(svgNS, "svg");
             svg.setAttribute("class", "ribbon-svg");
@@ -415,50 +450,29 @@
 
             svg.style.animationDuration = `${2 + Math.random() * 2}s`;
             svg.appendChild(path);
-            
             wrapper.appendChild(balloon);
             wrapper.appendChild(knot);
             wrapper.appendChild(svg);
 
-            // --- CLICK / TOUCH TO BLAST LOGIC ---
-            wrapper.addEventListener('click', function(e) {
-                // Get exact click coordinates for localized confetti blast
+            wrapper.addEventListener('click', function() {
                 const rect = wrapper.getBoundingClientRect();
-                const clickX = (rect.left + rect.width / 2) / window.innerWidth;
-                const clickY = (rect.top + rect.height / 3) / window.innerHeight;
-
-                // Tiny interactive confetti pop at balloon spot
-                confetti({
-                    particleCount: 30,
-                    spread: 60,
-                    origin: { x: clickX, y: clickY },
-                    colors: [bColor, rColor, '#ffffff']
-                });
-
-                // Instantly remove balloon from view
+                confetti({ particleCount: 30, spread: 60, origin: { x: (rect.left + rect.width / 2) / window.innerWidth, y: (rect.top + rect.height / 3) / window.innerHeight }, colors: [bColor, rColor, '#ffffff'] });
                 wrapper.remove();
-                
-                // Re-spawn a new balloon after 3 seconds to keep the loop going!
-                setTimeout(() => {
-                    spawnSingleBalloon();
-                }, 3000);
+                setTimeout(() => { spawnSingleBalloon(); }, 3000);
             });
 
             container.appendChild(wrapper);
         }
     }
 
-    // Helper function to dynamically add a new balloon when one pops
     function spawnSingleBalloon() {
         const container = document.getElementById('balloonContainer');
         if(!container) return;
-        
         const balloonColors = ['#D4AF37', '#F3E5AB', '#AA7C11', '#FF4136', '#0074D9', '#2ECC40', '#FF851B', '#B10DC9']; 
         const ribbonColors = ['#FF851B', '#0074D9', '#FF4136', '#2ECC40', '#FFDC00', '#B10DC9', '#7FDBFF', '#F3E5AB']; 
 
         const wrapper = document.createElement('div');
         wrapper.className = 'balloon-wrapper';
-        
         const bIdx = Math.floor(Math.random() * balloonColors.length);
         let rIdx = Math.floor(Math.random() * ribbonColors.length);
         if (bIdx === rIdx) { rIdx = (rIdx + 1) % ribbonColors.length; } 
@@ -467,7 +481,6 @@
         const rColor = ribbonColors[rIdx];
 
         wrapper.style.left = `${Math.random() * 100}%`;
-        wrapper.style.animationDelay = `0s`;
         wrapper.style.animationDuration = `${8 + Math.random() * 5}s`;
 
         const balloon = document.createElement('div');
@@ -492,16 +505,13 @@
 
         svg.style.animationDuration = `${2 + Math.random() * 2}s`;
         svg.appendChild(path);
-        
         wrapper.appendChild(balloon);
         wrapper.appendChild(knot);
         wrapper.appendChild(svg);
 
         wrapper.addEventListener('click', function() {
             const rect = wrapper.getBoundingClientRect();
-            const clickX = (rect.left + rect.width / 2) / window.innerWidth;
-            const clickY = (rect.top + rect.height / 3) / window.innerHeight;
-            confetti({ particleCount: 30, spread: 60, origin: { x: clickX, y: clickY }, colors: [bColor, rColor, '#ffffff'] });
+            confetti({ particleCount: 30, spread: 60, origin: { x: (rect.left + rect.width / 2) / window.innerWidth, y: (rect.top + rect.height / 3) / window.innerHeight }, colors: [bColor, rColor, '#ffffff'] });
             wrapper.remove();
             setTimeout(() => { spawnSingleBalloon(); }, 3000);
         });
